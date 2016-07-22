@@ -58,8 +58,7 @@
       };
 
       Parser.prototype.parse = function() {
-        var block, e, error, error1, j, len, ref;
-        this._lineNumber = null;
+        var block, e, error, error1, j, len, ref, results;
         while (this.reader.has()) {
           try {
             this.processLine();
@@ -70,22 +69,21 @@
           this.reader.next();
         }
         this.map.smallElements();
-        this._lineNumber = null;
         ref = this.blocks;
+        results = [];
         for (j = 0, len = ref.length; j < len; j++) {
           block = ref[j];
           try {
-            this.parseText(block.text, block);
+            results.push(this.parseText(block.text, block));
           } catch (error1) {
             e = error1;
             throw new Error(e.message + ": \"" + block.text + "\"");
           }
         }
-        return this.map.mapLineNumbers();
+        return results;
       };
 
       Parser.prototype.addNode = function(node) {
-        node.lineNumber = this._lineNumber;
         this.node.add(node);
         if (node.type === TYPES.block) {
           this.blocks.push(node);
@@ -214,7 +212,6 @@
       Parser.prototype.processLine = function() {
         var id, j, len, line, n, node, nodes, ref;
         line = this.reader.get();
-        this._lineNumber = this.reader.n;
         if (line.empty) {
           if (this.node.type === TYPES.block) {
             this.prevNode = this.node;

@@ -76,19 +76,6 @@
         }
       };
 
-      Render.prototype._sidebarAligned = function() {
-        var diff, main, mainHeight, sidebar;
-        sidebar = this.getOffsetTop(this.elems.sidebar, document.body);
-        main = this.getOffsetTop(this.elems.main, document.body);
-        mainHeight = this.elems.main.offsetHeight;
-        diff = Math.abs(main - sidebar);
-        if (diff < mainHeight / 4) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-
       Render.prototype.getBreakCost = function(node) {
         var cost, parent, pos;
         parent = node.parent();
@@ -113,30 +100,6 @@
           elem = elem.offsetParent;
         }
         return top;
-      };
-
-      Render.prototype.getNodeFromElem = function(elem) {
-        var id, node;
-        id = elem.id;
-        if (id == null) {
-          return null;
-        }
-        id = id.split('_');
-        if (id.length < 1) {
-          return null;
-        }
-        id = id[id.length - 1];
-        node = this.map.nodes[id];
-        return node;
-      };
-
-      Render.prototype.getNodeFromLine = function(line) {
-        var id;
-        id = this.map.lineNumbers[line];
-        if (id == null) {
-          return null;
-        }
-        return this.map.nodes[id];
       };
 
       Render.prototype.getMainNodes = function() {
@@ -319,9 +282,6 @@
 
       Render.prototype.setPages = function(H, W) {
         var elem, emptyPages, found, i, m, n, node, pageNo, pos, results;
-        if (!this._sidebarAligned()) {
-          return;
-        }
         this.pageHeight = H;
         this.mainNodes = this.getMainNodes();
         this.sidenoteMap = this.getSidenoteMap();
@@ -464,9 +424,6 @@
 
       Render.prototype.setFills = function() {
         var elemContent, elemSidenote, k, len, ref, results, sidenote;
-        if (!this._sidebarAligned()) {
-          return;
-        }
         ref = this.sidenotes;
         results = [];
         for (k = 0, len = ref.length; k < len; k++) {
